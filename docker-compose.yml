@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+  caddy:
+    container_name: caddy
+    image: caddy:2.6.4
+    restart: unless-stopped
+    networks:
+      - caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+
+  authelia:
+    container_name: authelia
+    image: authelia/authelia:4.37.5
+    restart: unless-stopped
+    networks:
+      - caddy
+    expose:
+      - 9091
+    ports:
+      - 9091
+    volumes:
+      - ./authelia:/config
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:7.0
+    restart: unless-stopped
+    networks:
+      - caddy
+
+  pygeoapi:
+    container_name: pygeoapi
+    image: geopython/pygeoapi:latest
+    volumes:
+      - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
+    ports:
+      - "80"
+    environment:
+      - SCRIPT_NAME=/api
+    depends_on:
+      - redis
+      - caddy
+      - authelia
+    networks:
+      - caddy
+
+networks:
+  caddy:
+    name: caddy
