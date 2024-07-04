@@ -2,7 +2,7 @@ version: "3.8"
 services:
   caddy:
     container_name: caddy
-    image: caddy:2.6.4
+    image: caddy:2.8.4
     restart: unless-stopped
     networks:
       - caddy
@@ -14,7 +14,7 @@ services:
 
   authelia:
     container_name: authelia
-    image: authelia/authelia:4.37.5
+    image: authelia/authelia:4.38.9
     restart: unless-stopped
     networks:
       - caddy
