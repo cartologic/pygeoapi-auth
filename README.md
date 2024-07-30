@@ -23,16 +23,36 @@ This project is a Dockerized application, and Docker Compose is used for the orc
 127.0.0.1       app.pygeoapi.local
 ```
 
-This step is necessary to resolve the local domains used in the Caddyfile.
+This step is necessary to resolve the local domains used in the Caddyfile or Nginx.
 
-1. **Start the Services:**
-   From the root directory of the project, start all the services using Docker Compose with the following command:
+2. **Start the Services :**
 
-```bash
-docker-compose up -d
-```
+   - ### Using Caddy
 
-This command pulls the necessary Docker images and starts the services defined in docker-compose.yml.
+     1. **Run the Services with Docker**:
+        From the root directory of the project, start all the services using Docker Compose with the following command:
+
+        ```bash
+        docker-compose up -d
+        ```
+
+   - ### Using Nginx
+
+   1. **Generate Self-Signed Certificates**:
+
+      > [!IMPORTANT]
+      > You must generate self-signed certificates for the local domains before starting the services.
+
+   Follow the provided instructions in [README.md](nginx/README.md) to generate self-signed certificates for the local domains or use your own certificates.
+
+   2. **Run the Services with Docker**:
+      From the root directory of the project, start all the services using Docker Compose with the following command:
+
+      ```bash
+      docker compose -f "docker-compose-nginx.yml" up -d
+      ```
+
+This command pulls the necessary Docker images and starts the services defined in docker-compose.yml (for Caddy) or docker-compose-nginx.yml (for Nginx).
 
 ## Testing Scenarios
 

@@ -1,0 +1,56 @@
+
+services:
+  nginx:
+    container_name: nginx
+    image: lscr.io/linuxserver/nginx
+    restart: unless-stopped
+    networks:
+      - nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/site-confs:/config/nginx/site-confs
+      - ./nginx/snippets:/config/nginx/snippets
+      - ./nginx/certs:/config/ssl # see nginx/README.md to generate self signed certs in this directory
+    environment:
+      TZ: 'UTC'
+      DOCKER_MODS: 'linuxserver/mods:nginx-proxy-confs'
+
+  authelia:
+    container_name: authelia
+    image: authelia/authelia:4.38.9
+    restart: unless-stopped
+    networks:
+      - nginx
+    ports:
+      - 9091:9091
+    volumes:
+      - ./authelia:/config
+    depends_on:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:7.0
+    restart: unless-stopped
+    networks:
+      - nginx
+
+  pygeoapi:
+    container_name: pygeoapi
+    image: geopython/pygeoapi:latest
+    volumes:
+      - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
+    environment:
+      - SCRIPT_NAME=/api
+    depends_on:
+      - redis
+      - nginx
+      - authelia
+    networks:
+      - nginx
+
+networks:
+  nginx:
+    name: nginx
