@@ -29,19 +29,28 @@ This step is necessary to resolve the local domains used in the Caddyfile or Ngi
 
    - ### Using Caddy
 
-     From the root directory of the project, start all the services using Docker Compose with the following command:
+     1. **Run the Services with Docker**:
+        From the root directory of the project, start all the services using Docker Compose with the following command:
 
-     ```bash
-     docker-compose up -d
-     ```
+        ```bash
+        docker-compose up -d
+        ```
 
    - ### Using Nginx
 
-     From the root directory of the project, start all the services using Docker Compose with the following command:
+   1. **Generate Self-Signed Certificates**:
 
-     ```bash
-     docker compose -f "docker-compose-nginx.yml" up -d
-     ```
+      > [!IMPORTANT]
+      > You must generate self-signed certificates for the local domains before starting the services.
+
+   Follow the provided instructions in [README.md](nginx/README.md) to generate self-signed certificates for the local domains or use your own certificates.
+
+   2. **Run the Services with Docker**:
+      From the root directory of the project, start all the services using Docker Compose with the following command:
+
+      ```bash
+      docker compose -f "docker-compose-nginx.yml" up -d
+      ```
 
 This command pulls the necessary Docker images and starts the services defined in docker-compose.yml (for Caddy) or docker-compose-nginx.yml (for Nginx).
 
