@@ -8,6 +8,9 @@ app.pygeoapi.local {
         forward_auth authelia:9091 {
                 uri /api/authz/forward-auth?authelia_url=https://pygeoapi.local/
                 copy_headers Remote-User Remote-Groups Remote-Name Remote-Email
+                header_up X-Forwarded-Method {method}
+                header_up X-Forwarded-URI {uri}
+                header_up Proxy-Authorization {http.request.header.Authorization}
         }
         reverse_proxy pygeoapi:80
 }
