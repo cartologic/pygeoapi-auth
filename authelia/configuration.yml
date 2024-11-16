@@ -62,14 +62,21 @@ access_control:
         - "group:cartologic"
 
 session:
+  secret: unsecure_session_secret
+  name: authelia_session
+  same_site: "lax"
+  inactivity: 5m
+  expiration: 1h
+  remember_me_duration: 5M
   cookies:
     - domain: "pygeoapi.local"
       authelia_url: "https://pygeoapi.local"
       default_redirection_url: "https://app.pygeoapi.local/api"
-  secret: unsecure_session_secret
-  expiration: 1h
-  inactivity: 5m
-  remember_me_duration: 5M
+      name: "authelia_session"
+      same_site: "lax"
+      inactivity: "5m"
+      expiration: "1h"
+      remember_me: "1d"
 
   redis:
     host: redis
