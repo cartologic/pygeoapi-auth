@@ -67,7 +67,7 @@ session:
   same_site: "lax"
   inactivity: 5m
   expiration: 1h
-  remember_me_duration: 5M
+  remember_me: 5M
   cookies:
     - domain: "pygeoapi.local"
       authelia_url: "https://pygeoapi.local"
