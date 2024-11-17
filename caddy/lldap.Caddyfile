@@ -14,3 +14,7 @@ app.pygeoapi.local {
         }
         reverse_proxy pygeoapi:80
 }
+
+lldap.pygeoapi.local {
+        reverse_proxy lldap:17170 
+}
