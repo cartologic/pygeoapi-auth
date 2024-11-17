@@ -22,7 +22,7 @@ services:
     ports:
       - 9091
     volumes:
-      - ./authelia:/config
+      - ./authelia-caddy:/config
     depends_on:
       - redis
 

@@ -24,9 +24,9 @@ services:
     networks:
       - nginx
     ports:
-      - 9091:9091
+      - 9091
     volumes:
-      - ./authelia:/config
+      - ./authelia-nginx:/config
     depends_on:
       - redis
 

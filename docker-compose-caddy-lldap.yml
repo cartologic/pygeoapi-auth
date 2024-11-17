@@ -22,8 +22,7 @@ services:
     ports:
       - 9091
     volumes:
-      - ./authelia:/config
-      - ./authelia/configuration-lldap.yml:/config/configuration.yml
+      - ./authelia-caddy-lldap:/config
     depends_on:
       - redis
     environment:
