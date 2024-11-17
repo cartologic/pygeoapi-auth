@@ -10,7 +10,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./nginx/site-confs:/config/nginx/site-confs
+      - ./nginx/site-confs-lldap:/config/nginx/site-confs
       - ./nginx/snippets:/config/nginx/snippets
       - ./nginx/certs:/config/ssl # see nginx/README.md to generate self signed certs in this directory
     environment:
@@ -26,10 +26,14 @@ services:
     ports:
       - 9091:9091
     volumes:
-      - ./authelia:/config
-      - ./authelia/configuration-lldap.yml:/config/configuration.yml
+      - ./authelia-lldap:/config
     depends_on:
       - redis
+    environment:
+      - AUTHELIA_SESSION_DOMAIN=pygeoapi.local
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD=super_strong_ldap_password
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN=dc=pygeoapi,dc=local
+
 
   redis:
     container_name: redis

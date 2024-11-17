@@ -21,12 +21,6 @@ log:
 totp:
   issuer: authelia.com
 
-# duo_api:
-#  hostname: api-123456789.pygeoapi.local
-#  integration_key: ABCDEF
-#  # This secret can also be set using the env variables AUTHELIA_DUO_API_SECRET_KEY_FILE
-#  secret_key: 1234567890abcdefghifjkl
-
 authentication_backend:
   password_reset:
     disable: false
