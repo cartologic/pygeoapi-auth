@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   caddy:
     container_name: caddy
@@ -44,7 +43,7 @@ services:
     volumes:
       - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
     ports:
-      - "80"
+      - 80
     environment:
       - SCRIPT_NAME=/api
     depends_on:
@@ -55,8 +54,8 @@ services:
       - caddy
 
   lldap:
-    container_name: "lldap"
-    image: "nitnelave/lldap:latest"
+    container_name: lldap
+    image: lldap/lldap:stable
     restart: unless-stopped
     networks:
       - caddy
