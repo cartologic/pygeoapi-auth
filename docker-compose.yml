@@ -26,6 +26,10 @@ services:
       - ./authelia:/config
     depends_on:
       - redis
+    environment:
+      - AUTHELIA_SESSION_DOMAIN=pygeoapi.local
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD=super_strong_ldap_password
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN=dc=pygeoapi,dc=local
 
   redis:
     container_name: redis
@@ -50,6 +54,22 @@ services:
     networks:
       - caddy
 
+  lldap:
+    container_name: "lldap"
+    image: "nitnelave/lldap:latest"
+    restart: unless-stopped
+    networks:
+      - caddy
+    expose:
+      - 3890 # LDAP service
+      - 17170 # Web service
+    volumes:
+      - ./lldap/config:/data:rw
+    environment:
+      - LLDAP_JWT_SECRET=REPLACE_WITH_RANDOM
+      - LLDAP_KEY_SEED=REPLACE_WITH_RANDOM
+      - LLDAP_LDAP_BASE_DN=dc=pygeoapi,dc=local
+      - LLDAP_LDAP_USER_PASS="super_strong_ldap_password"
 networks:
   caddy:
     name: caddy

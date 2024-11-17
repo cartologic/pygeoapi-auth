@@ -1,1 +1,3 @@
 authelia/db.sqlite3
+lldap/config/users.db
+lldap/config/lldap_config.toml
