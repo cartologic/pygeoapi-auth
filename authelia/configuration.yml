@@ -87,6 +87,7 @@ session:
   inactivity: 5m
   expiration: 1h
   remember_me: 5M
+<<<<<<< HEAD
   # Remove the `cookies` block if keeping `domain`, or vice versa
   domain: "pygeoapi.local"
   # cookies:
@@ -98,6 +99,17 @@ session:
   #     inactivity: "5m"
   #     expiration: "1h"
   #     remember_me: "1d"
+=======
+  cookies:
+    - domain: "pygeoapi.local"
+      authelia_url: "https://pygeoapi.local"
+      default_redirection_url: "https://app.pygeoapi.local/api"
+      name: "authelia_session"
+      same_site: "lax"
+      inactivity: "5m"
+      expiration: "1h"
+      remember_me: "1d"
+>>>>>>> main
 
   redis:
     host: redis
