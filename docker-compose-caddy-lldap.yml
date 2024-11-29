@@ -39,9 +39,13 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    image: geopython/pygeoapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.pygeoapi
+    restart: unless-stopped
     volumes:
       - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
+      - ./authelia-caddy-lldap:/pygeoapi/authelia-config
     ports:
       - 80
     environment:
