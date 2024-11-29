@@ -17,8 +17,6 @@ services:
     restart: unless-stopped
     networks:
       - caddy
-    expose:
-      - 9091
     ports:
       - 9091
     volumes:
