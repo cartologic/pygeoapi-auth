@@ -1,0 +1,16 @@
+FROM geopython/pygeoapi:latest
+
+# Install git and build dependencies
+RUN apt-get update && apt-get install -y git
+
+# Clone and install pygeoapi-auth
+RUN git clone https://github.com/geopython/pygeoapi-auth.git /tmp/pygeoapi-auth && \
+    cd /tmp/pygeoapi-auth && \
+    python3 setup.py install && \
+    rm -rf /tmp/pygeoapi-auth
+
+# Copy our custom entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

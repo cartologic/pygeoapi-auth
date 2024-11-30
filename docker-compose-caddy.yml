@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   caddy:
     container_name: caddy
@@ -18,12 +17,10 @@ services:
     restart: unless-stopped
     networks:
       - caddy
-    expose:
-      - 9091
     ports:
       - 9091
     volumes:
-      - ./authelia:/config
+      - ./authelia-caddy:/config
     depends_on:
       - redis
 
@@ -36,11 +33,15 @@ services:
 
   pygeoapi:
     container_name: pygeoapi
-    image: geopython/pygeoapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.pygeoapi
+    restart: unless-stopped
     volumes:
       - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
+      - ./authelia-caddy:/pygeoapi/authelia-config
     ports:
-      - "80"
+      - 80
     environment:
       - SCRIPT_NAME=/api
     depends_on:

@@ -1,0 +1,76 @@
+services:
+  caddy:
+    container_name: caddy
+    image: caddy:2.8.4
+    restart: unless-stopped
+    networks:
+      - caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./caddy/lldap.Caddyfile:/etc/caddy/Caddyfile
+
+  authelia:
+    container_name: authelia
+    image: authelia/authelia:4.38.17
+    restart: unless-stopped
+    networks:
+      - caddy
+    ports:
+      - 9091
+    volumes:
+      - ./authelia-caddy-lldap:/config
+    depends_on:
+      - redis
+    environment:
+      - AUTHELIA_SESSION_DOMAIN=pygeoapi.local
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD=super_strong_ldap_password
+      - AUTHELIA_AUTHENTICATION_BACKEND_LDAP_BASE_DN=dc=pygeoapi,dc=local
+
+  redis:
+    container_name: redis
+    image: redis:7.0
+    restart: unless-stopped
+    networks:
+      - caddy
+
+  pygeoapi:
+    container_name: pygeoapi
+    build:
+      context: .
+      dockerfile: Dockerfile.pygeoapi
+    restart: unless-stopped
+    volumes:
+      - ./pygeoapi-config.yml:/pygeoapi/local.config.yml
+      - ./authelia-caddy-lldap:/pygeoapi/authelia-config
+    ports:
+      - 80
+    environment:
+      - SCRIPT_NAME=/api
+    depends_on:
+      - redis
+      - caddy
+      - authelia
+    networks:
+      - caddy
+
+  lldap:
+    container_name: lldap
+    image: lldap/lldap:stable
+    restart: unless-stopped
+    networks:
+      - caddy
+    expose:
+      - 3890 # LDAP service
+      - 17170 # Web service
+    volumes:
+      - ./lldap/config:/data:rw
+    environment:
+      - LLDAP_JWT_SECRET=REPLACE_WITH_RANDOM
+      - LLDAP_KEY_SEED=REPLACE_WITH_RANDOM
+      - LLDAP_LDAP_BASE_DN=dc=pygeoapi,dc=local
+      - LLDAP_LDAP_USER_PASS="super_strong_ldap_password"
+networks:
+  caddy:
+    name: caddy

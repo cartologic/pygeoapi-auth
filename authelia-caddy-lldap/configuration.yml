@@ -4,11 +4,12 @@
 ###############################################################
 
 # This secret can also be set using the env variables AUTHELIA_JWT_SECRET_FILE
-jwt_secret: a_very_important_secret
+identity_validation:
+  reset_password:
+    jwt_secret: a_very_important_secret
 
 server:
-  host: 0.0.0.0
-  port: 9091
+  address: tcp://0.0.0.0:9091/
   endpoints:
     authz:
       forward-auth:
@@ -20,15 +21,27 @@ log:
 totp:
   issuer: authelia.com
 
-# duo_api:
-#  hostname: api-123456789.pygeoapi.local
-#  integration_key: ABCDEF
-#  # This secret can also be set using the env variables AUTHELIA_DUO_API_SECRET_KEY_FILE
-#  secret_key: 1234567890abcdefghifjkl
-
 authentication_backend:
-  file:
-    path: /config/users_database.yml
+  password_reset:
+    disable: false
+  refresh_interval: 1m
+  ldap:
+    implementation: custom
+    address: ldap://lldap:3890
+    timeout: 5s
+    start_tls: false
+    base_dn: dc=pygeoapi,dc=local
+    additional_users_dn: ou=people
+    users_filter: "(&({username_attribute}={input})(objectClass=person))"
+    additional_groups_dn: ou=groups
+    groups_filter: "(member={dn})"
+    attributes:
+      display_name: displayName
+      username: uid
+      group_name: cn
+      mail: mail
+    user: uid=admin,ou=people,dc=pygeoapi,dc=local
+    password: "super_strong_ldap_password" ## change this
 
 access_control:
   default_policy: deny
@@ -68,15 +81,17 @@ session:
   inactivity: 5m
   expiration: 1h
   remember_me: 5M
-  cookies:
-    - domain: "pygeoapi.local"
-      authelia_url: "https://pygeoapi.local"
-      default_redirection_url: "https://app.pygeoapi.local/api"
-      name: "authelia_session"
-      same_site: "lax"
-      inactivity: "5m"
-      expiration: "1h"
-      remember_me: "1d"
+  # Remove the `cookies` block if keeping `domain`, or vice versa
+  domain: "pygeoapi.local"
+  # cookies:
+  #   - domain: "pygeoapi.local"
+  #     authelia_url: "https://pygeoapi.local"
+  #     default_redirection_url: "https://app.pygeoapi.local/api"
+  #     name: "authelia_session"
+  #     same_site: "lax"
+  #     inactivity: "5m"
+  #     expiration: "1h"
+  #     remember_me: "1d"
 
   redis:
     host: redis
